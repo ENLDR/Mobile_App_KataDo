@@ -113,6 +113,8 @@ public class LoginActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(email)) {
             dbHelper.updateActiveStatus(email, 0);
         }
+        else
+            dbHelper.updateActiveStatus(email, 1);
     }
     private void saveUserEmail(User user) {
         SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);

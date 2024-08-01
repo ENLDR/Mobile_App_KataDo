@@ -24,9 +24,9 @@ public class ProcessingActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (mProgressStatus < 100) {
+                while (mProgressStatus < 30) {
                     mProgressStatus++;
-                    android.os.SystemClock.sleep(100); // Sleep for 100 milliseconds
+                    android.os.SystemClock.sleep(30); // Sleep for 100 milliseconds
                     handler.post(new Runnable() {
                         @Override
                         public void run() {

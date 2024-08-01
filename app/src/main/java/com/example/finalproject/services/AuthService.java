@@ -3,9 +3,13 @@ package com.example.finalproject.services;
 import com.example.finalproject.interfaces.ApiService;
 import com.example.finalproject.interfaces.DeleteCallBack;
 import com.example.finalproject.interfaces.ResponseCallBack;
+import com.example.finalproject.interfaces.passwordresponceCallBack;
 import com.example.finalproject.models.DeleteAcc;
+import com.example.finalproject.models.EmailRequest;
 import com.example.finalproject.models.LoginResponse;
 import com.example.finalproject.models.LogoutRequest;
+import com.example.finalproject.models.PasswordResetRequest;
+import com.example.finalproject.models.PasswordResetResponse;
 import com.example.finalproject.models.User;
 import com.example.finalproject.models.DeleteResponse;
 
@@ -132,4 +136,126 @@ public class AuthService {
         });
 
     }
+//newly added
+    public void validateEmail(String email, final ResponseCallBack callback) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<Void> call = apiService.validateEmail(new EmailRequest(email));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        callback.onSuccess(null);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    callback.onError(new Throwable("Email not registered"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+    /*public void resetPassword(String email, String newPassword, String resetToken, final passwordresponceCallBack callback) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiService apiService = retrofit.create(ApiService.class);
+        PasswordResetRequest passwordResetRequest = new PasswordResetRequest(email, newPassword, resetToken);
+        Call<PasswordResetResponse> call = apiService.resetPassword(passwordResetRequest);
+        call.enqueue(new Callback<PasswordResetResponse>() {
+            @Override
+            public void onResponse(Call<PasswordResetResponse> call, Response<PasswordResetResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        callback.onSuccess(response.body());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    callback.onError(new Throwable("Password reset failed"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PasswordResetResponse> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }*/
+
+    /*public void resetPassword(String email, String newPassword, String resetToken, final passwordresponceCallBack callback) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiService apiService = retrofit.create(ApiService.class);
+        PasswordResetRequest passwordResetRequest = new PasswordResetRequest(email, newPassword, resetToken);
+        Call<PasswordResetResponse> call = apiService.resetPassword(passwordResetRequest);
+        call.enqueue(new Callback<PasswordResetResponse>() {
+            @Override
+            public void onResponse(Call<PasswordResetResponse> call, Response<PasswordResetResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        callback.onSuccess(response.body());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    callback.onError(new Throwable("Password reset failed"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PasswordResetResponse> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }*/
+
+    public void resetPassword(String email,String confirmpassword, String newPassword, final passwordresponceCallBack callback) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiService apiService = retrofit.create(ApiService.class);
+        PasswordResetRequest passwordResetRequest = new PasswordResetRequest(email,confirmpassword, newPassword);
+        Call<PasswordResetResponse> call = apiService.resetPassword(passwordResetRequest);
+        call.enqueue(new Callback<PasswordResetResponse>() {
+            @Override
+            public void onResponse(Call<PasswordResetResponse> call, Response<PasswordResetResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        callback.onSuccess(response.body());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    callback.onError(new Throwable("Password reset failed"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PasswordResetResponse> call, Throwable t) {
+                callback.onError(t);
+            }
+        });
+    }
+
+
+
+
+
+
+
 }

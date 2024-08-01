@@ -10,6 +10,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.finalproject.interfaces.ResponseCallBack;
+import com.example.finalproject.models.EmailRequest;
+import com.example.finalproject.models.LoginResponse;
+import com.example.finalproject.services.AuthService;
+
 public class EmailValidationActivity extends AppCompatActivity {
 
     private EditText emailEditText;
@@ -51,14 +56,24 @@ public class EmailValidationActivity extends AppCompatActivity {
             emailEditText.requestFocus();
             return;
         }
+        AuthService authService=new AuthService();
+        EmailRequest emailRequest = new EmailRequest(email);
+        authService.validateEmail(email, new ResponseCallBack() {
+            @Override
+            public void onSuccess(LoginResponse loginResponse) throws Exception {
+                Intent intent = new Intent(EmailValidationActivity.this, ResetPasswordActivity.class);
+                intent.putExtra("email", email);
+                startActivity(intent);
+                finish();
 
-        if (dbHelper.isEmailRegistered(email)) {
-            Intent intent = new Intent(EmailValidationActivity.this, ResetPasswordActivity.class);
-            intent.putExtra("email", email);
-            startActivity(intent);
-            finish();
-        } else {
-            Toast.makeText(this, "Email not registered", Toast.LENGTH_SHORT).show();
-        }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Toast.makeText(EmailValidationActivity.this, "Email not registered", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 }
